@@ -10,7 +10,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -36,6 +35,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -48,7 +48,7 @@ import java.util.UUID;
 import gitau.dev.talinserver.Common.Common;
 import gitau.dev.talinserver.Interface.ItemClickListener;
 import gitau.dev.talinserver.Models.Category;
-import gitau.dev.talinserver.Service.OrderListener;
+import gitau.dev.talinserver.Models.Token;
 import gitau.dev.talinserver.ViewHolder.MenuViewHolder;
 
 public class HomeActivity extends AppCompatActivity
@@ -126,9 +126,17 @@ public class HomeActivity extends AppCompatActivity
 
         loadMenu();
 
-        //Call Service
-        Intent service = new Intent(HomeActivity.this, OrderListener.class);
-        startService(service);
+        //Send token
+        updateToken(FirebaseInstanceId.getInstance().getToken());
+
+
+    }
+
+    private void updateToken(String token) {
+        FirebaseDatabase db = FirebaseDatabase.getInstance();
+        DatabaseReference tokens = db.getReference("Tokens");
+        Token data = new Token(token,true);
+        tokens.child(Common.currentUser.getPhone()).setValue(data);
     }
 
 
@@ -184,7 +192,6 @@ public class HomeActivity extends AppCompatActivity
         });
         dialog.show();
     }
-
 
 
     private void chooseImage() {

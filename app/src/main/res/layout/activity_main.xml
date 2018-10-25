@@ -48,33 +48,33 @@
             <!--android:layout_margin="8dp"-->
             <!--android:textColor="@android:color/white" />-->
 
-        <Button
-            android:id="@+id/btnSignIn"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="6dp"
-            android:layout_weight="1"
-            android:background="#FFF"
-            android:text="SIGN IN"
-            android:layout_margin="8dp"
-            android:textColor="#797979" />
+        <!--<Button-->
+            <!--android:id="@+id/btnSignIn"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginRight="6dp"-->
+            <!--android:layout_weight="1"-->
+            <!--android:background="#FFF"-->
+            <!--android:text="SIGN IN"-->
+            <!--android:layout_margin="8dp"-->
+            <!--android:textColor="#797979" />-->
 
 
 
-        <!--<info.hoang8f.widget.FButton-->
-        <!--android:id="@+id/btnRegister"-->
-        <!--android:text="Sign In"-->
-        <!--android:textColor="@android:color/white"-->
-        <!--android:layout_weight="1"-->
-        <!--android:layout_width="0dp"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_margin="8dp"-->
-        <!--app:buttonColor="@color/btnsignActive"-->
-        <!--app:shadowHeight="5dp"-->
-        <!--app:cornerRadius="4dp"-->
-        <!--app:shadowEnabled="true"-->
-        <!--android:shadowColor="@android:color/black"-->
-        <!--/>-->
+        <info.hoang8f.widget.FButton
+        android:id="@+id/btnSignIn"
+        android:text="Sign In"
+        android:textColor="@android:color/white"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        app:fButtonColor="@color/btnsignActive"
+        app:shadowHeight="5dp"
+        app:cornerRadius="4dp"
+        app:shadowEnabled="true"
+        android:shadowColor="@android:color/black"
+        />
     </LinearLayout>
 
 </RelativeLayout>

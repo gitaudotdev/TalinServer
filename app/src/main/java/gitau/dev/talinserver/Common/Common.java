@@ -7,6 +7,8 @@ import android.graphics.Paint;
 
 import gitau.dev.talinserver.Models.Request;
 import gitau.dev.talinserver.Models.User;
+import gitau.dev.talinserver.Remote.APIService;
+import gitau.dev.talinserver.Remote.FCMRetrofitClient;
 import gitau.dev.talinserver.Remote.IGeoCoordinates;
 import gitau.dev.talinserver.Remote.RetrofitClient;
 
@@ -20,6 +22,7 @@ public class Common {
     public static final int PICK_IMAGE_REQUEST = 100;
 
     public static final String Base_Url = "https://maps.googleapis.com/";
+    public static final String fcm_Url = "https://fcm.googleapis.com/";
 
     public static String convertCodeToStatus(String code)
     {
@@ -33,6 +36,10 @@ public class Common {
 
     public static IGeoCoordinates getGeoCodeService(){
         return RetrofitClient.getClient(Base_Url).create(IGeoCoordinates.class);
+    }
+
+    public static APIService getFCMClient(){
+        return FCMRetrofitClient.getRetrofit(fcm_Url).create(APIService.class);
     }
 
     public static Bitmap scaleBitmap (Bitmap bitmap , int newWidth,int newHeight)

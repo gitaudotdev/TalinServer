@@ -53,6 +53,7 @@ public class SignInActivity extends AppCompatActivity {
     private void signInUser(String phone, String password) {
         final ProgressDialog mdialog = new ProgressDialog(this);
         mdialog.setMessage("Please Wait...");
+        mdialog.setCanceledOnTouchOutside(false);
         mdialog.show();
 
         final String localphone = phone;

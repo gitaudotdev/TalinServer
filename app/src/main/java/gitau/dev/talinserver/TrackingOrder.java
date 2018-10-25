@@ -110,6 +110,8 @@ public class TrackingOrder extends FragmentActivity implements OnMapReadyCallbac
             mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
             if(mLastLocation !=null)
             {
+                mMap.clear();
+
                 double latitude = mLastLocation.getLatitude();
                 double longitude = mLastLocation.getLongitude();
 
