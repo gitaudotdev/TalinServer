@@ -133,7 +133,7 @@ public class TrackingOrder extends FragmentActivity implements OnMapReadyCallbac
             }
             else
             {
-//                Toast.makeText(this, "Couldn't get the Location", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Couldn't get the Location", Toast.LENGTH_SHORT).show();
 
                 Log.d("DEBUG","couldn't get the location");
             }
