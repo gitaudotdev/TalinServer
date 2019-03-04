@@ -63,7 +63,7 @@
 
     <info.hoang8f.widget.FButton
         android:id="@+id/btnSign"
-        android:text="SSIGN IN"
+        android:text="SIGN IN"
         android:textColor="@android:color/white"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

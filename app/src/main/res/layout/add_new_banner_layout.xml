@@ -15,14 +15,14 @@
         android:layout_height="wrap_content">
 
         <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/edtfood_Name"
-            android:hint="Name"
+            android:id="@+id/edtfoodid"
+            android:hint="Food ID"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColorHint="@color/colorPrimary"
             android:text=""
             android:inputType="text"
-            android:textSize="34sp"
+            android:textSize="20sp"
             app:met_primaryColor="@color/colorPrimary"
             app:met_floatingLabel="highlight"
             app:met_baseColor="@color/colorPrimary"
@@ -30,49 +30,21 @@
             />
 
         <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/edtDescription"
-            android:hint="Description"
+            android:id="@+id/edtFoodName"
+            android:hint="Food Name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColorHint="@color/colorPrimary"
             android:text=""
             android:inputType="textMultiLine"
-            android:textSize="24sp"
+            android:textSize="18sp"
             app:met_primaryColor="@color/colorPrimary"
             app:met_floatingLabel="highlight"
             app:met_baseColor="@color/colorPrimary"
             app:met_singleLineEllipsis="true"
             />
 
-        <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/edtPrice"
-            android:hint="Price"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColorHint="@color/colorPrimary"
-            android:text=""
-            android:inputType="number"
-            android:textSize="24sp"
-            app:met_primaryColor="@color/colorPrimary"
-            app:met_floatingLabel="highlight"
-            app:met_baseColor="@color/colorPrimary"
-            app:met_singleLineEllipsis="true"
-            />
 
-        <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/edtDiscount"
-            android:hint="Discount"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColorHint="@color/colorPrimary"
-            android:text=""
-            android:inputType="text"
-            android:textSize="34sp"
-            app:met_primaryColor="@color/colorPrimary"
-            app:met_floatingLabel="highlight"
-            app:met_baseColor="@color/colorPrimary"
-            app:met_singleLineEllipsis="true"
-            />
 
         <LinearLayout
             android:weightSum="2"
@@ -80,18 +52,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
-            <!--<Button-->
-                <!--android:id="@+id/btnSelect"-->
-                <!--android:layout_weight="1"-->
-                <!--android:layout_width="0dp"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_marginRight="8dp"-->
-                <!--android:layout_marginLeft="8dp"-->
-                <!--android:layout_margin="8dp"-->
-                <!--android:background="@color/colorPrimary"-->
-                <!--android:layout_alignParentBottom="true"-->
-                <!--android:text="SELECT"-->
-                <!--android:textColor="@android:color/white" />-->
+
 
             <info.hoang8f.widget.FButton
                 android:id="@+id/btnSelect"
@@ -111,19 +72,7 @@
                 android:shadowColor="@android:color/black"
                 />
 
-            <!--<Button-->
-                <!--android:id="@+id/btnUpload"-->
-                <!--android:layout_weight="1"-->
-                <!--android:layout_width="0dp"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_marginRight="8dp"-->
-                <!--android:layout_marginLeft="8dp"-->
-                <!--android:layout_margin="8dp"-->
-                <!--android:background="@color/colorPrimaryDark"-->
-                <!--android:layout_alignParentBottom="true"-->
-                <!--android:text="UPLOAD"-->
-                <!--android:textColor="@android:color/white"-->
-                <!--/>-->
+
             <info.hoang8f.widget.FButton
                 android:id="@+id/btnUpload"
                 android:text="UPLOAD"

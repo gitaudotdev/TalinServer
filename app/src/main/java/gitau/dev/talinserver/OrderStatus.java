@@ -11,9 +11,11 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -21,11 +23,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import gitau.dev.talinserver.Common.Common;
+import gitau.dev.talinserver.Models.DataMessage;
 import gitau.dev.talinserver.Models.MyResponse;
-import gitau.dev.talinserver.Models.Notification;
 import gitau.dev.talinserver.Models.Request;
-import gitau.dev.talinserver.Models.Sender;
 import gitau.dev.talinserver.Models.Token;
 import gitau.dev.talinserver.Remote.APIService;
 import gitau.dev.talinserver.ViewHolder.OrderViewHolder;
@@ -68,6 +72,68 @@ public class OrderStatus extends AppCompatActivity {
     }
 
     private void loadOrders() {
+        FirebaseRecyclerOptions options = new FirebaseRecyclerOptions.Builder<Request>()
+                .setQuery(requests,Request.class)
+                .build();
+
+        adapter = new FirebaseRecyclerAdapter<Request, OrderViewHolder>(options) {
+            @Override
+            protected void onBindViewHolder(@NonNull OrderViewHolder viewHolder, final int position, @NonNull final Request model) {
+                viewHolder.txtOrderId.setText(adapter.getRef(position).getKey());
+                viewHolder.txtOrderStatus.setText(Common.convertCodeToStatus(model.getStatus()));
+                viewHolder.txtOrderAddress.setText(model.getAddress());
+                viewHolder.txtOrderPhone.setText(model.getPhone());
+                viewHolder.txtOrderDate.setText(Common.getDate(Long.parseLong(adapter.getRef(position).getKey())));
+
+                viewHolder.btnEdit.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showUpdateDialog(adapter.getRef(position).getKey(),adapter.getItem(position));
+                    }
+                });
+
+                viewHolder.btnRemove.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        deleteOrder(adapter.getRef(position).getKey());
+                    }
+                });
+
+                viewHolder.btnDetail.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent orderDetail = new Intent(OrderStatus.this,OrderDetailActivity.class);
+                        Common.currentRequest = model;
+                        orderDetail.putExtra("OrderId",adapter.getRef(position).getKey());
+                        startActivity(orderDetail);
+                    }
+                });
+
+                viewHolder.btnDirection.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent trackingIntent = new Intent(OrderStatus.this,TrackingOrder.class);
+                        Common.currentRequest = model;
+                        startActivity(trackingIntent);
+                    }
+                });
+            }
+
+            @NonNull
+            @Override
+            public OrderViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+                View view = LayoutInflater.from(viewGroup.getContext())
+                        .inflate(R.layout.order_layout,viewGroup,false);
+                return new OrderViewHolder(view);
+            }
+        };
+
+        adapter.startListening();
+
+
+        adapter.notifyDataSetChanged();
+        mRecyclerView.setAdapter(adapter);
+        /*
         adapter = new FirebaseRecyclerAdapter<Request, OrderViewHolder>(
                 Request.class,
                 R.layout.order_layout,
@@ -116,10 +182,15 @@ public class OrderStatus extends AppCompatActivity {
                 });
 
             }
-        };
+        };*/
 
-        adapter.notifyDataSetChanged();
-        mRecyclerView.setAdapter(adapter);
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        adapter.stopListening();
     }
 
     private void showUpdateDialog(String key, final Request item) {
@@ -169,10 +240,15 @@ public class OrderStatus extends AppCompatActivity {
                             Token token = snapshot.getValue(Token.class);
 
                             //Raw Payload
-                            Notification notification = new Notification("CodeBender","Your Order"+key+"Was Updated");
-                            Sender content = new Sender(token.getToken(),notification);
+//                            Notification notification = new Notification("CodeBender","Your Order"+key+"Was Updated");
+//                            Sender content = new Sender(token.getToken(),notification);
+                            Map<String,String> dataSend = new HashMap<>();
+                            dataSend.put("title","CodeBender");
+                            dataSend.put("message","Your Order"+key+"Was Updated");
+                            DataMessage dataMessage = new DataMessage(token.getToken(),dataSend);
 
-                            mService.sendNotification(content)
+
+                            mService.sendNotification(dataMessage)
                                     .enqueue(new Callback<MyResponse>() {
                                         @Override
                                         public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {

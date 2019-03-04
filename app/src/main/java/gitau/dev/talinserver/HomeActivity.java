@@ -8,25 +8,27 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -258,6 +260,45 @@ public class HomeActivity extends AppCompatActivity
 
 
     private void loadMenu() {
+
+        FirebaseRecyclerOptions<Category> options = new FirebaseRecyclerOptions.Builder<Category>()
+                .setQuery(categories,Category.class)
+                .build();
+
+        adapter = new FirebaseRecyclerAdapter<Category, MenuViewHolder>(options) {
+            @Override
+            protected void onBindViewHolder(@NonNull MenuViewHolder holder, int position, @NonNull Category model) {
+                holder.txtMenu.setText(model.getName());
+                Picasso.get()
+                        .load(model.getImage())
+                        .into(holder.mImageView);
+
+                holder.setItemClickListener(new ItemClickListener() {
+                    @Override
+                    public void OnClick(View view, int position, boolean isLongClick) {
+                        //Send category id and start new Activity
+                        Intent foodlist = new Intent(HomeActivity.this,FoodList.class);
+                        foodlist.putExtra("CategoryId",adapter.getRef(position).getKey());
+                        startActivity(foodlist);
+                    }
+                });
+            }
+
+            @NonNull
+            @Override
+            public MenuViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+                View itemView = LayoutInflater.from(viewGroup.getContext())
+                        .inflate(R.layout.menu_item,viewGroup,false);
+                return new MenuViewHolder(itemView);
+            }
+        };
+
+        adapter.startListening();
+
+
+        adapter.notifyDataSetChanged();
+        menu_recycler.setAdapter(adapter);
+/*
         adapter = new FirebaseRecyclerAdapter<Category, MenuViewHolder>(
                 Category.class,
                 R.layout.menu_item,
@@ -282,8 +323,14 @@ public class HomeActivity extends AppCompatActivity
                 });
             }
         };
-        adapter.notifyDataSetChanged();
-        menu_recycler.setAdapter(adapter);
+        */
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        adapter.stopListening();
     }
 
     @Override
@@ -330,10 +377,16 @@ public class HomeActivity extends AppCompatActivity
             Intent order = new Intent(HomeActivity.this,OrderStatus.class);
             startActivity(order);
 
-        } else if (id == R.id.nav_cart) {
+        } else if (id == R.id.nav_banners) {
+            Intent banner = new Intent(HomeActivity.this,BannerActivity.class);
+            startActivity(banner);
 
-        } else if (id == R.id.nav_sign_out) {
-
+        } else if (id == R.id.nav_message) {
+            Intent message = new Intent(HomeActivity.this,NewsMessaging.class);
+            startActivity(message);
+        }else if (id == R.id.nav_shipper){
+            Intent shipping =new Intent(HomeActivity.this,ShipperManagement.class);
+            startActivity(shipping);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

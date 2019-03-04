@@ -4,6 +4,10 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.text.format.DateFormat;
+
+import java.util.Calendar;
+import java.util.Locale;
 
 import gitau.dev.talinserver.Models.Request;
 import gitau.dev.talinserver.Models.User;
@@ -13,19 +17,23 @@ import gitau.dev.talinserver.Remote.IGeoCoordinates;
 import gitau.dev.talinserver.Remote.RetrofitClient;
 
 public class Common {
+    public static final String SHIPPERS_TABLE = "Shippers";
     public  static User currentUser;
     public static Request currentRequest;
 
+    public static  String topicName = "News";
+
     public  static final String UPDATE = "Update";
     public static final String DELETE = "Delete";
+
+    public static final String PHONE_TEXT = "userPhone";
 
     public static final int PICK_IMAGE_REQUEST = 100;
 
     public static final String Base_Url = "https://maps.googleapis.com/";
     public static final String fcm_Url = "https://fcm.googleapis.com/";
 
-    public static String convertCodeToStatus(String code)
-    {
+    public static String convertCodeToStatus(String code) {
         if(code.equals("0"))
             return "Placed";
         else if (code.equals("1"))
@@ -42,8 +50,7 @@ public class Common {
         return FCMRetrofitClient.getRetrofit(fcm_Url).create(APIService.class);
     }
 
-    public static Bitmap scaleBitmap (Bitmap bitmap , int newWidth,int newHeight)
-    {
+    public static Bitmap scaleBitmap (Bitmap bitmap , int newWidth,int newHeight) {
         Bitmap scaledBitmap = Bitmap.createBitmap(newWidth,newHeight,Bitmap.Config.ARGB_8888);
 
         float scaleX = newWidth/(float)bitmap.getWidth();
@@ -58,5 +65,12 @@ public class Common {
         canvas.drawBitmap(bitmap,0,0,new Paint(Paint.FILTER_BITMAP_FLAG));
 
         return scaledBitmap;
+    }
+
+    public static String getDate(long time){
+        Calendar calendar = Calendar.getInstance(Locale.ENGLISH);
+        calendar.setTimeInMillis(time);
+        StringBuilder date = new StringBuilder(DateFormat.format("dd:MM:yyyy HH:mm",calendar).toString());
+        return date.toString();
     }
 }

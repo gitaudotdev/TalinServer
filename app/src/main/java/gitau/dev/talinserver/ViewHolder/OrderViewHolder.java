@@ -11,7 +11,7 @@ import gitau.dev.talinserver.R;
 
 public class OrderViewHolder extends RecyclerView.ViewHolder  {
 
-    public TextView txtOrderId,txtOrderStatus,txtOrderPhone,txtOrderAddress;
+    public TextView txtOrderId,txtOrderStatus,txtOrderPhone,txtOrderAddress,txtOrderDate;
 
     public Button btnEdit,btnRemove,btnDetail,btnDirection;
 
@@ -23,6 +23,7 @@ public class OrderViewHolder extends RecyclerView.ViewHolder  {
         txtOrderId = itemView.findViewById(R.id.order_id);
         txtOrderStatus = itemView.findViewById(R.id.order_status);
         txtOrderPhone = itemView.findViewById(R.id.order_phone);
+        txtOrderDate = itemView.findViewById(R.id.order_date);
 
         btnEdit = itemView.findViewById(R.id.btnEdit);
         btnDetail = itemView.findViewById(R.id.btnDetail);

@@ -4,27 +4,30 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -36,9 +39,7 @@ import java.util.UUID;
 
 import gitau.dev.talinserver.Common.Common;
 import gitau.dev.talinserver.Interface.ItemClickListener;
-import gitau.dev.talinserver.Models.Category;
 import gitau.dev.talinserver.Models.Food;
-import gitau.dev.talinserver.Models.Request;
 import gitau.dev.talinserver.ViewHolder.FoodViewHolder;
 
 public class FoodList extends AppCompatActivity {
@@ -111,7 +112,7 @@ public class FoodList extends AppCompatActivity {
         dialog.setMessage("Please Fill in Full details");
 
         LayoutInflater inflater = this.getLayoutInflater();
-        View add_menu = inflater.inflate(R.layout.add_new_category_layout,null);
+        View add_menu = inflater.inflate(R.layout.add_new_food_layout,null);
 
         edtName = add_menu.findViewById(R.id.edtName);
         edtDescription = add_menu.findViewById(R.id.edtDescription);
@@ -233,6 +234,40 @@ public class FoodList extends AppCompatActivity {
     }
 
     private void loadFoodsList(String categoryId) {
+        Query listFoodByCategoryId = foodList.orderByChild("menuId").equalTo(categoryId);
+        FirebaseRecyclerOptions<Food> options = new FirebaseRecyclerOptions.Builder<Food>()
+                .setQuery(listFoodByCategoryId,Food.class)
+                .build();
+
+        adapter = new FirebaseRecyclerAdapter<Food, FoodViewHolder>(options) {
+            @Override
+            protected void onBindViewHolder(@NonNull FoodViewHolder holder, int position, @NonNull Food model) {
+                holder.txtfood.setText(model.getName());
+                Picasso.get()
+                        .load(model.getImage())
+                        .into(holder.images);
+
+                holder.setItemClickListener(new ItemClickListener() {
+                    @Override
+                    public void OnClick(View view, int position, boolean isLongClick) {
+                        //add code baadae
+                    }
+                });
+            }
+
+            @NonNull
+            @Override
+            public FoodViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int position) {
+                View itemView = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.food_item_layout,parent,false);
+                return new FoodViewHolder(itemView);
+            }
+        };
+        adapter.startListening();
+
+        adapter.notifyDataSetChanged();
+        mRecyclerView.setAdapter(adapter);
+/*
         adapter = new FirebaseRecyclerAdapter<Food, FoodViewHolder>(
                 Food.class,
                 R.layout.food_item_layout,
@@ -254,8 +289,14 @@ public class FoodList extends AppCompatActivity {
                 });
             }
         };
-        adapter.notifyDataSetChanged();
-        mRecyclerView.setAdapter(adapter);
+        */
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        adapter.stopListening();
     }
 
     @Override

@@ -41,7 +41,7 @@ public class OrderDetailActivity extends AppCompatActivity {
         order_phone.setText(Common.currentRequest.getPhone());
         order_total.setText(Common.currentRequest.getTotal());
         order_address.setText(Common.currentRequest.getAddress());
-        order_coment.setText(Common.currentRequest.getComment());
+        order_coment.setText(Common.currentRequest.getComments());
 
         OrderDetailAdapter adapter = new OrderDetailAdapter(Common.currentRequest.getFoods());
         adapter.notifyDataSetChanged();
