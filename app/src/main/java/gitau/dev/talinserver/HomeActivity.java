@@ -47,6 +47,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.UUID;
 
+import dmax.dialog.SpotsDialog;
 import gitau.dev.talinserver.Common.Common;
 import gitau.dev.talinserver.Interface.ItemClickListener;
 import gitau.dev.talinserver.Models.Category;
@@ -93,7 +94,7 @@ public class HomeActivity extends AppCompatActivity
 
         //Init Firebase
         database = FirebaseDatabase.getInstance();
-        categories = database.getReference("Category");
+        categories = database.getReference("Restaurants").child(Common.currentUser.getRestaurantId()).child("Category");
         storage = FirebaseStorage.getInstance();
         store = storage.getReference();
 
@@ -493,9 +494,9 @@ public class HomeActivity extends AppCompatActivity
     private void changeImage(final Category item) {
         if(saveUri!= null)
         {
-            final ProgressDialog mDialog = new ProgressDialog(this);
-            mDialog.setMessage("Uploading...");
+            final android.app.AlertDialog mDialog = new SpotsDialog(this);
             mDialog.show();
+            mDialog.setMessage("Uploading...");
 
             String Image_name= UUID.randomUUID().toString();
             final StorageReference imageFolder = store.child("images/"+Image_name);

@@ -75,7 +75,7 @@ public class ShipperManagement extends AppCompatActivity {
         adapter = new FirebaseRecyclerAdapter<Shipper, ShipperViewHolder>(allShippers) {
             @Override
             protected void onBindViewHolder(@NonNull ShipperViewHolder holder, final int position, @NonNull final Shipper model) {
-                    holder.shipper_phone.setText(model.getName());
+                    holder.shipper_name.setText(model.getName());
                     holder.shipper_phone.setText(model.getPhone());
 
                     holder.btn_edit.setOnClickListener(new View.OnClickListener() {

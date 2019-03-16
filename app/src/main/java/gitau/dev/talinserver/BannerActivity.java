@@ -75,7 +75,7 @@ public class BannerActivity extends AppCompatActivity {
 
         //init Firebase
         db = FirebaseDatabase.getInstance();
-        banners = db.getReference("Banner");
+        banners = db.getReference("Restaurants").child(Common.currentUser.getRestaurantId()).child("Banner");
         storage = FirebaseStorage.getInstance();
         mStorageReference = storage.getReference();
 

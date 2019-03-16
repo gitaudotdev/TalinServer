@@ -18,6 +18,8 @@ import gitau.dev.talinserver.Remote.RetrofitClient;
 
 public class Common {
     public static final String SHIPPERS_TABLE = "Shippers";
+    public static final String ORDERS_TO_BE_SHIPPED_TABLE = "OrdersToBeShipped";
+
     public  static User currentUser;
     public static Request currentRequest;
 
@@ -38,6 +40,8 @@ public class Common {
             return "Placed";
         else if (code.equals("1"))
             return "On my Way";
+        else if (code.equals("2"))
+            return "Shipping";
         else
             return "Shipped";
     }

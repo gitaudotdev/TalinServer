@@ -162,7 +162,7 @@ public class TrackingOrder extends FragmentActivity implements OnMapReadyCallbac
 
                             LatLng orderLocation = new LatLng(Double.parseDouble(lat),Double.parseDouble(lng));
 
-                            Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.orderlocale);
+                            Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.box);
 
                             bitmap = Common.scaleBitmap(bitmap,70,70);
 

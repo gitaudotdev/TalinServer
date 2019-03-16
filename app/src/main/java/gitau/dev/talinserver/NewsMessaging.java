@@ -36,7 +36,8 @@ public class NewsMessaging extends AppCompatActivity {
             public void onClick(View v) {
                 //Create Message
                 Map<String,String> dataSend = new HashMap<>();
-                dataSend.put("title","CodeBender");
+                dataSend.put("title",edtTitle.getText().toString());
+                dataSend.put("message",edtMessage.getText().toString());
 //                dataSend.put("message","Your Order"+key+"Was Updated");
 //                DataMessage dataMessage = new DataMessage(token.getToken(),dataSend);
 

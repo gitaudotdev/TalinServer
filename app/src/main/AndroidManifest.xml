@@ -56,11 +56,6 @@
             android:label="@string/title_activity_tracking_order" />
         <activity android:name=".OrderDetailActivity" />
 
-        <service android:name=".Service.MyFirebaseIdService">
-            <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_SERVICE" />
-            </intent-filter>
-        </service>
         <service android:name=".Service.MyFirebaseMessaging">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />

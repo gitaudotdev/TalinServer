@@ -1,5 +1,6 @@
 package gitau.dev.talinserver;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -16,6 +17,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import dmax.dialog.SpotsDialog;
 import gitau.dev.talinserver.Common.Common;
 import gitau.dev.talinserver.Models.User;
 
@@ -51,10 +53,10 @@ public class SignInActivity extends AppCompatActivity {
     }
 
     private void signInUser(String phone, String password) {
-        final ProgressDialog mdialog = new ProgressDialog(this);
-        mdialog.setMessage("Please Wait...");
+        final AlertDialog mdialog = new SpotsDialog(this);
         mdialog.setCanceledOnTouchOutside(false);
         mdialog.show();
+        mdialog.setMessage("Please Wait...");
 
         final String localphone = phone;
         final String localPassword = password;

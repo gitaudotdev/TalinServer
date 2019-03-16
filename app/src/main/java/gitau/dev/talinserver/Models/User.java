@@ -5,6 +5,7 @@ public class User {
     private String password;
     private String phone;
     private String IsStaff;
+    private String restaurantId;
 
     public User() {
     }
@@ -45,5 +46,13 @@ public class User {
 
     public void setIsStaff(String isStaff) {
         IsStaff = isStaff;
+    }
+
+    public String getRestaurantId() {
+        return restaurantId;
+    }
+
+    public void setRestaurantId(String restaurantId) {
+        this.restaurantId = restaurantId;
     }
 }

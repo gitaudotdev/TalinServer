@@ -1,5 +1,6 @@
 package gitau.dev.talinserver;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -9,7 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AlertDialog;
+
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -37,6 +38,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.UUID;
 
+import dmax.dialog.SpotsDialog;
 import gitau.dev.talinserver.Common.Common;
 import gitau.dev.talinserver.Interface.ItemClickListener;
 import gitau.dev.talinserver.Models.Food;
@@ -75,7 +77,7 @@ public class FoodList extends AppCompatActivity {
         setContentView(R.layout.activity_food_list);
 
         db= FirebaseDatabase.getInstance();
-        foodList = db.getReference("Foods");
+        foodList = db.getReference("Restaurants").child(Common.currentUser.getRestaurantId()).child("Foods");
 
         storage = FirebaseStorage.getInstance();
         mStorageReference = storage.getReference();
@@ -326,12 +328,12 @@ public class FoodList extends AppCompatActivity {
         dialog.setMessage("Please Fill in Full details");
 
         LayoutInflater inflater = this.getLayoutInflater();
-        View add_menu = inflater.inflate(R.layout.add_new_food_layout,null);
+        View update_menu = inflater.inflate(R.layout.add_new_food_layout,null);
 
-        edtName = add_menu.findViewById(R.id.edtfood_Name);
-        edtDescription = add_menu.findViewById(R.id.edtDescription);
-        edtPrice = add_menu.findViewById(R.id.edtPrice);
-        edtDiscount = add_menu.findViewById(R.id.edtDiscount);
+        edtName = update_menu.findViewById(R.id.edtfood_Name);
+        edtDescription = update_menu.findViewById(R.id.edtDescription);
+        edtPrice = update_menu.findViewById(R.id.edtPrice);
+        edtDiscount = update_menu.findViewById(R.id.edtDiscount);
 
 
         //Set default values for view
@@ -340,8 +342,8 @@ public class FoodList extends AppCompatActivity {
         edtPrice.setText(item.getPrice());
         edtDiscount.setText(item.getDiscount());
 
-        btnSelect = add_menu.findViewById(R.id.btnSelect);
-        btnUpload = add_menu.findViewById(R.id.btnUpload);
+        btnSelect = update_menu.findViewById(R.id.btnSelect);
+        btnUpload = update_menu.findViewById(R.id.btnUpload);
 
         //Event for button
 
@@ -360,7 +362,7 @@ public class FoodList extends AppCompatActivity {
         });
 
 
-        dialog.setView(add_menu);
+        dialog.setView(update_menu);
         dialog.setIcon(R.drawable.ic_shopping_cart_black_24dp);
 
 
@@ -368,9 +370,6 @@ public class FoodList extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
-
-
-
                     //Update Information
                     item.setName(edtName.getText().toString());
                     item.setPrice(edtPrice.getText().toString());
@@ -379,7 +378,7 @@ public class FoodList extends AppCompatActivity {
 
                     foodList.child(key).setValue(item);
 
-                    Snackbar.make(rootLayout," Food "+item.getName()+"Was Created",Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(rootLayout," Food "+item.getName()+"Was Updated",Snackbar.LENGTH_SHORT).show();
 
             }
         });

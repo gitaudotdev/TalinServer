@@ -53,7 +53,7 @@ public class NotificationHelper extends ContextWrapper {
                 .setContentIntent(intent)
                 .setContentTitle(title)
                 .setContentText(body)
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.drawable.ic_local_shipping_black_24dp)
                 .setSound(soundUri)
                 .setAutoCancel(false);
     }
@@ -64,7 +64,7 @@ public class NotificationHelper extends ContextWrapper {
         return new Notification.Builder(getApplicationContext(),CODEBENDER_CHANEL_ID)
                 .setContentTitle(title)
                 .setContentText(body)
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.drawable.ic_local_shipping_black_24dp)
                 .setSound(soundUri)
                 .setAutoCancel(false);
     }

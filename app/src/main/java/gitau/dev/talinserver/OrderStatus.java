@@ -23,7 +23,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import gitau.dev.talinserver.Common.Common;
@@ -47,7 +49,7 @@ public class OrderStatus extends AppCompatActivity {
     FirebaseDatabase mDatabase;
     DatabaseReference requests;
 
-    MaterialSpinner spinner;
+    MaterialSpinner spinner,shippersPinner;
 
     APIService mService;
 
@@ -58,7 +60,7 @@ public class OrderStatus extends AppCompatActivity {
 
         //Firebase
         mDatabase = FirebaseDatabase.getInstance();
-        requests = mDatabase.getReference("Requests");
+        requests = mDatabase.getReference("Restaurants").child(Common.currentUser.getRestaurantId()).child("Requests");
 
         //Init
         mRecyclerView = findViewById(R.id.listOrders);
@@ -202,7 +204,26 @@ public class OrderStatus extends AppCompatActivity {
         final View view = inflater.inflate(R.layout.update_order_layout,null);
 
         spinner = view.findViewById(R.id.statusSpinner);
-        spinner.setItems("Placed","On my Way","Shipped");
+        spinner.setItems("Placed","On my Way","Shipping");
+
+        shippersPinner = view.findViewById(R.id.shipperSpinner);
+
+        //Load All Shippers by phone Number
+        final List<String> shippersList = new ArrayList<>();
+        FirebaseDatabase.getInstance().getReference(Common.SHIPPERS_TABLE)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for (DataSnapshot shippersnap: dataSnapshot.getChildren())
+                            shippersList.add(shippersnap.getKey());
+                        shippersPinner.setItems(shippersList);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
 
         alertDialog.setView(view);
 
@@ -214,10 +235,30 @@ public class OrderStatus extends AppCompatActivity {
                 dialogInterface.dismiss();
                 item.setStatus(String.valueOf(spinner.getSelectedIndex()));
 
-                requests.child(localKey).setValue(item);
-                adapter.notifyDataSetChanged();
-                
-                sendOrderStatusToUser(localKey,item);
+                if (item.getStatus().equals("2"))
+                {
+                    //Add item to Table OrdersToBeShipped
+                    FirebaseDatabase.getInstance().getReference(Common.ORDERS_TO_BE_SHIPPED_TABLE)
+                            .child(shippersPinner.getItems().get(shippersPinner.getSelectedIndex()).toString())
+                            .child(localKey)
+                            .setValue(item);
+
+
+                    requests.child(localKey).setValue(item);
+                    adapter.notifyDataSetChanged();
+
+                    sendOrderStatusToUser(localKey,item);
+                    sendOrderShippingRequestToShipper(shippersPinner.getItems().get(shippersPinner.getSelectedIndex()).toString(),item);
+                }
+                else
+                {
+                    requests.child(localKey).setValue(item);
+                    adapter.notifyDataSetChanged();
+
+                    sendOrderStatusToUser(localKey,item);
+                }
+
+
             }
         });
         alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
@@ -229,15 +270,61 @@ public class OrderStatus extends AppCompatActivity {
         alertDialog.show();
     }
 
-    private void sendOrderStatusToUser(final String key,final Request item) {
+    private void sendOrderShippingRequestToShipper(final String shipperPhone, Request item) {
         DatabaseReference tokens = mDatabase.getReference("Tokens");
-        tokens.orderByKey().equalTo(item.getPhone())
-                .addValueEventListener(new ValueEventListener() {
+        tokens.child(shipperPhone)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        for(DataSnapshot snapshot : dataSnapshot.getChildren())
+                        if (dataSnapshot.exists())
                         {
-                            Token token = snapshot.getValue(Token.class);
+                            Token token = dataSnapshot.getValue(Token.class);
+
+
+                            Map<String,String> dataSend = new HashMap<>();
+                            dataSend.put("title","CodeBender");
+                            dataSend.put("message","Your Have a new Order To Ship");
+                            DataMessage dataMessage = new DataMessage(token.getToken(),dataSend);
+
+
+                            mService.sendNotification(dataMessage)
+                                    .enqueue(new Callback<MyResponse>() {
+                                        @Override
+                                        public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
+                                            if(response.body().success ==1)
+                                            {
+                                                Toast.makeText(OrderStatus.this, "Sent To Shipper...", Toast.LENGTH_SHORT).show();
+                                            }
+                                            else{
+                                                Toast.makeText(OrderStatus.this, "failed to send notification", Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<MyResponse> call, Throwable t) {
+                                            Log.e("ERROR",t.getMessage());
+                                        }
+                                    });
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+    }
+
+    private void sendOrderStatusToUser(final String key,final Request item) {
+        DatabaseReference tokens = mDatabase.getReference("Tokens");
+        tokens.child(item.getPhone())
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists())
+                        {
+                            Token token = dataSnapshot.getValue(Token.class);
 
                             //Raw Payload
 //                            Notification notification = new Notification("CodeBender","Your Order"+key+"Was Updated");
@@ -266,7 +353,6 @@ public class OrderStatus extends AppCompatActivity {
                                             Log.e("ERROR",t.getMessage());
                                         }
                                     });
-                                    
                         }
                     }
 
